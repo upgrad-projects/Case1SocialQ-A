@@ -2,6 +2,9 @@ package com.upgrad.quora.service.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import java.util.List;
 
 
@@ -11,35 +14,56 @@ import java.util.List;
  */
 @Entity
 @Table(name="users")
-@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+//@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Size(max = 50)
 	private String aboutme;
 
 	private String contactnumber;
 
+	@Size(max = 30)
 	private String country;
 
+	@Size(max = 30)
 	private String dob;
 
+	@NotNull
+	@Size(max = 50)
+	@Column(unique = true)
 	private String email;
 
+	@NotNull
+	@Size(max = 30)
 	private String firstname;
 
+	@NotNull
+	@Size(max = 30)
 	private String lastname;
 
+	@NotNull
+	@Size(max = 255)
 	private String password;
 
+	@Size(max = 30)
 	private String role;
 
+	@NotNull
+	@Size(max = 200)
 	private String salt;
 
+	@NotNull
+	@Size(max = 30)
+	@Column(unique = true)
 	private String username;
 
+	@Size(max = 200)
+	@NotNull
 	private String uuid;
 
 	//bi-directional many-to-one association to Answer
