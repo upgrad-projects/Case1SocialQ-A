@@ -23,7 +23,7 @@ public class SignoutBusinessService {
 	public UserEntity signout(final String authorization) throws SignOutRestrictedException {
 		UserAuthEntity userAuthEntity = userAuthDao.getUserByAuthorization(authorization);
 		
-		if(userAuthEntity != null) {
+		if(userAuthEntity != null && userAuthEntity.getLogoutAt() == null) {
 			UserEntity userEntity = userAuthEntity.getUser();
 			
 			Timestamp logoutTime = Timestamp.valueOf(ZonedDateTime.now().toLocalDateTime());
