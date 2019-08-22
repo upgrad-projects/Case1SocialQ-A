@@ -19,5 +19,6 @@ com\upgrad\quora\service\exception\AuthorizationFailedException.class
 com\upgrad\quora\service\ServiceConfiguration.class
 com\upgrad\quora\service\business\SignoutBusinessService.class
 com\upgrad\quora\service\entity\AnswerEntity.class
+com\upgrad\quora\service\business\AdminBusinessService.class
 com\upgrad\quora\service\exception\AuthenticationFailedException.class
 com\upgrad\quora\service\exception\SignUpRestrictedException.class
