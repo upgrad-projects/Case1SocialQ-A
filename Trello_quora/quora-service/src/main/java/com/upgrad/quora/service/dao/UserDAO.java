@@ -5,11 +5,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 
 @Repository
@@ -43,5 +41,11 @@ public class UserDAO {
 		}catch (NoResultException nre) {
 			return null;
 		}
+	}
+	
+	@Transactional
+	public UserEntity deleteUser(final UserEntity userEntity) {
+		entityManager.remove(userEntity);
+		return userEntity;
 	}
 }

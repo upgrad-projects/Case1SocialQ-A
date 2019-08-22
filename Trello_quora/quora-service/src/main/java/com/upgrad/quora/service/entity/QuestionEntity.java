@@ -25,7 +25,7 @@ public class QuestionEntity implements Serializable {
 	private String uuid;
 
 	//bi-directional many-to-one association to Answer
-	@OneToMany(mappedBy="question")
+	@OneToMany(mappedBy="question", cascade = CascadeType.ALL)
 	private List<AnswerEntity> answers;
 
 	//bi-directional many-to-one association to User
