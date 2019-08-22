@@ -40,7 +40,7 @@ public class AdminBusinessService {
 		}
 		
 		if(userAuthEntity.getUser().getRole().equalsIgnoreCase(ROLE)) {
-			userDao.deleteUser(userId);
+			userDao.deleteUser(userEntity);
 			return userId;
 		} else {
 			throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");

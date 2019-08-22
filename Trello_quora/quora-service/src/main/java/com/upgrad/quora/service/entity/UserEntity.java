@@ -73,15 +73,15 @@ public class UserEntity implements Serializable {
 	private String uuid;
 
 	//bi-directional many-to-one association to Answer
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	private List<AnswerEntity> answers;
 
 	//bi-directional many-to-one association to Question
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	private List<QuestionEntity> questions;
 
 	//bi-directional many-to-one association to UserAuth
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	private List<UserAuthEntity> userAuths;
 
 	public UserEntity() {

@@ -44,8 +44,8 @@ public class UserDAO {
 	}
 	
 	@Transactional
-	public String deleteUser(final String userId) {
-		entityManager.remove(userId);
-		return userId;
+	public UserEntity deleteUser(final UserEntity userEntity) {
+		entityManager.remove(userEntity);
+		return userEntity;
 	}
 }
