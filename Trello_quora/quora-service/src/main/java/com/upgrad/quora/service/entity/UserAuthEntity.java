@@ -11,11 +11,15 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="user_auth")
-@NamedQuery(name="UserAuth.findAll", query="SELECT u FROM UserAuth u")
+@NamedQueries({ 
+	@NamedQuery(name="UserAuth.findUserByToken", query="SELECT u FROM UserAuthEntity u WHERE u.accessToken = :access_token"),
+	//@NamedQuery(name="UserAuth.getUserById", query="SELECT u FROM UserAuthEntity u WHERE u.uuid = :userId")
+})
 public class UserAuthEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name="access_token")
