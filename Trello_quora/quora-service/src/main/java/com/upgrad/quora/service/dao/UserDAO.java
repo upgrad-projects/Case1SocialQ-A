@@ -34,10 +34,4 @@ public class UserDAO {
 			return null;
 		}
 	}
-	
-	@Transactional()
-	public UserAuthEntity createUserAuthToken(final UserAuthEntity userAuthEntity) {
-		entityManager.persist(userAuthEntity);
-		return userAuthEntity;
-	}
 }

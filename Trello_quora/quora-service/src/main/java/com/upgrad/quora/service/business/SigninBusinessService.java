@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.upgrad.quora.service.dao.UserAuthDAO;
 import com.upgrad.quora.service.dao.UserDAO;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
@@ -17,6 +18,9 @@ import com.upgrad.quora.service.exception.AuthorizationFailedException;
 public class SigninBusinessService {
 	@Autowired
 	private UserDAO userDao;
+	
+	@Autowired 
+	UserAuthDAO userAuthDao;
 	
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
 	public UserAuthEntity signin(final String email, final String password) throws AuthorizationFailedException {
@@ -46,7 +50,7 @@ public class SigninBusinessService {
 			userAuthEntity.setUser(userEntity);
 			userAuthEntity.setUuid(userEntity.getUuid());
 			
-			return userDao.createUserAuthToken(userAuthEntity);			
+			return userAuthDao.createUserAuthToken(userAuthEntity);			
 		} else {
 			throw new AuthorizationFailedException("ATH-002", "Password failed");
 		}

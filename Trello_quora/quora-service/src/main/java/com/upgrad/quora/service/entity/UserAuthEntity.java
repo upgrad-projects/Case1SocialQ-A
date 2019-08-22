@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="user_auth")
-//@NamedQuery(name="UserAuth.findAll", query="SELECT u FROM UserAuth u")
+@NamedQuery(name="UserAuth.findUserByToken", query="SELECT u FROM UserAuthEntity u WHERE u.accessToken = :access_token")
 public class UserAuthEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
