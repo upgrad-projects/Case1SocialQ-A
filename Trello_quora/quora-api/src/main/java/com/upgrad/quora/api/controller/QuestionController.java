@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.upgrad.quora.api.model.QuestionDeleteResponse;
 import com.upgrad.quora.api.model.QuestionDetailsResponse;
 import com.upgrad.quora.api.model.QuestionEditRequest;
 import com.upgrad.quora.api.model.QuestionEditResponse;
@@ -34,7 +35,9 @@ public class QuestionController {
 	@Autowired
 	private QuestionBusinessService questionService;
 
-	private static final String STATUS = "QUESTION CREATED";
+	private static final String STATUS_CREATED = "QUESTION CREATED";
+	private static final String STATUS_EDITED = "QUESTION EDITED";
+	private static final String STATUS_DELETED = "QUESTION DELETED";
 
 	// Creates a question and maps it to appropriate user.
 	// Throws appropriate exception when user not logged in or found.
@@ -50,7 +53,7 @@ public class QuestionController {
 		questionEntity.setUser(userEntity);
 
 		QuestionEntity createdQuestionEntity = questionService.createQuestion(questionEntity);
-		QuestionResponse questionResponse = new QuestionResponse().id(createdQuestionEntity.getUuid()).status(STATUS);
+		QuestionResponse questionResponse = new QuestionResponse().id(createdQuestionEntity.getUuid()).status(STATUS_CREATED);
 
 		return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.OK);
 	}
@@ -81,16 +84,35 @@ public class QuestionController {
 	public ResponseEntity<QuestionEditResponse> editQuestionContent(QuestionEditRequest questionEditContent,
 			@PathVariable("questionId") final String questionId,
 			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
-		
+
 		QuestionEntity questionEntity = new QuestionEntity();
-		
+
 		questionEntity.setContent(questionEditContent.getContent());
-		
+
 		QuestionEntity editedQuestionEntity = questionService.editQuestion(questionEntity, questionId, authorization);
-		
+
 		QuestionEditResponse questionEditResponse = new QuestionEditResponse().id(editedQuestionEntity.getUuid())
-																			  .status("QUESTION EDITED");
-		
+				.status(STATUS_EDITED);
+
 		return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
 	}
+
+	// Delete the question
+	// Verifies if the question is deleted by the same person who has created this
+	// question.
+	// Throws appropriate exception if user is not logged in, not found or tries to
+	// delete someone else's question.
+	@RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<QuestionDeleteResponse> deleteQuestion(@PathVariable("questionId") final String questionId,
+			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
+
+		QuestionEntity questionEntity = questionService.deleteQuestion(questionId, authorization);
+		
+		QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse().id(questionEntity.getUuid())
+																					.status(STATUS_DELETED);
+		
+		return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
+	}
+
+	
 }

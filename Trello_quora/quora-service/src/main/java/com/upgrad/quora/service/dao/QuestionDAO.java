@@ -38,5 +38,11 @@ public class QuestionDAO {
 		entityManager.merge(questionEntity);
 		return questionEntity;
 	}
+	
+	@Transactional
+	public QuestionEntity deleteQuestion(QuestionEntity questionEntity) {
+		entityManager.remove(questionEntity);
+		return questionEntity;
+	}
 }
  

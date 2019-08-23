@@ -20,6 +20,8 @@ import com.upgrad.quora.service.exception.UserNotFoundException;
 public class AdminController {
 	@Autowired
 	private AdminBusinessService adminBusinessService;
+	
+	private static final String STATUS_DELETED = "USER SUCCESSFULLY DELETED";
 
 	@RequestMapping(method = RequestMethod.DELETE, path = "/admin/user/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<UserDeleteResponse> userDelete(@PathVariable("userId") final String userId,
@@ -27,7 +29,7 @@ public class AdminController {
 
 		String uuid = adminBusinessService.deleteUser(userId, authorization);
 		
-		UserDeleteResponse userDeleteResponse = new UserDeleteResponse().id(uuid).status("USER SUCCESSFULLY DELETED");
+		UserDeleteResponse userDeleteResponse = new UserDeleteResponse().id(uuid).status(STATUS_DELETED);
 		
 		return new ResponseEntity<UserDeleteResponse>(userDeleteResponse, HttpStatus.OK);
 	}
