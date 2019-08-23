@@ -1,5 +1,7 @@
 package com.upgrad.quora.service.business;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,5 +39,19 @@ public class QuestionBusinessService {
 		}
 		
 		return userAuthEntity.getUser();
+	}
+	
+	public List<QuestionEntity> getAllQuestions(final String authorization) throws AuthorizationFailedException {
+		UserAuthEntity userAuthEntity = userAuthDao.getUserByAuthorization(authorization);
+		
+		if(userAuthEntity == null) {
+			throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+		}
+		
+		if(userAuthEntity.getLogoutAt() != null) {
+			throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions");
+		}
+		
+		return questionDao.getAllQuestions();
 	}
 }
