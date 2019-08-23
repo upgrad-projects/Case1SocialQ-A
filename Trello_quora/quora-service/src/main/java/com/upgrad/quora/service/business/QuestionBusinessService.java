@@ -27,6 +27,7 @@ public class QuestionBusinessService {
 		return questionDao.createQuestion(questionEntity);		
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public UserEntity getUserByAuthorization(final String authorization) throws AuthorizationFailedException {
 		UserAuthEntity userAuthEntity = userAuthDao.getUserByAuthorization(authorization);
 		
@@ -49,9 +50,38 @@ public class QuestionBusinessService {
 		}
 		
 		if(userAuthEntity.getLogoutAt() != null) {
-			throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions");
+			throw new AuthorizationFailedException("ATHR-002", "User is signed out. Sign in first to get all questions");
 		}
 		
 		return questionDao.getAllQuestions();
+	}
+	
+	public QuestionEntity editQuestion(QuestionEntity questionEntity, final String questionId, final String authorization) throws AuthorizationFailedException {
+UserAuthEntity userAuthEntity = userAuthDao.getUserByAuthorization(authorization);
+		
+		if(userAuthEntity == null) {
+			throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+		}
+		
+		if(userAuthEntity.getLogoutAt() != null) {
+			throw new AuthorizationFailedException("ATHR-002", "User is signed out. Sign in first to edit the question");
+		}
+		
+		QuestionEntity questionToBeEdited = questionDao.getQuestion(questionId);
+		UserEntity userEntity = userAuthEntity.getUser();
+		
+		if(questionToBeEdited.getUser().getUuid().equals(userEntity.getUuid())) {
+			questionEntity.setAnswers(questionToBeEdited.getAnswers());
+			questionEntity.setDate(questionToBeEdited.getDate());
+			questionEntity.setId(questionToBeEdited.getId());
+			questionEntity.setUser(questionToBeEdited.getUser());
+			questionEntity.setUuid(questionToBeEdited.getUuid());
+			
+			questionEntity = questionDao.editQuestion(questionEntity);
+		}else {
+			throw new AuthorizationFailedException("ATHR-003", "Only the question owner can edit the question");
+		}
+		
+		return questionEntity;
 	}
 }

@@ -26,4 +26,17 @@ public class QuestionDAO {
 		return entityManager.createNamedQuery("Question.getAll", QuestionEntity.class)
 														  .getResultList();
 	}
+	
+	public QuestionEntity getQuestion(final String questionId) {
+		return entityManager.createNamedQuery("Question.getQuestion", QuestionEntity.class)
+							.setParameter("questionId", questionId)
+							.getSingleResult();
+	}
+	
+	@Transactional
+	public QuestionEntity editQuestion(QuestionEntity questionEntity) {
+		entityManager.merge(questionEntity);
+		return questionEntity;
+	}
 }
+ 

@@ -11,12 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.upgrad.quora.api.model.QuestionDetailsResponse;
+import com.upgrad.quora.api.model.QuestionEditRequest;
+import com.upgrad.quora.api.model.QuestionEditResponse;
 import com.upgrad.quora.api.model.QuestionRequest;
 import com.upgrad.quora.api.model.QuestionResponse;
 import com.upgrad.quora.service.business.QuestionBusinessService;
@@ -65,7 +68,29 @@ public class QuestionController {
 				questionDetailsResponses.add(new QuestionDetailsResponse().id(que.getUuid()).content(que.getContent()));
 			}
 		}
-		
+
 		return new ResponseEntity<List<QuestionDetailsResponse>>(questionDetailsResponses, HttpStatus.OK);
+	}
+
+	// Edits the question.
+	// Verifies if the question is edited by the same person who has created this
+	// question.
+	// Throws appropriate exception if user is not logged in, not found or tries to
+	// edit someone else's question.
+	@RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<QuestionEditResponse> editQuestionContent(QuestionEditRequest questionEditContent,
+			@PathVariable("questionId") final String questionId,
+			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
+		
+		QuestionEntity questionEntity = new QuestionEntity();
+		
+		questionEntity.setContent(questionEditContent.getContent());
+		
+		QuestionEntity editedQuestionEntity = questionService.editQuestion(questionEntity, questionId, authorization);
+		
+		QuestionEditResponse questionEditResponse = new QuestionEditResponse().id(editedQuestionEntity.getUuid())
+																			  .status("QUESTION EDITED");
+		
+		return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
 	}
 }
