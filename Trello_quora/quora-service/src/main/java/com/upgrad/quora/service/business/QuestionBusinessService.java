@@ -14,6 +14,7 @@ import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 
 @Service
@@ -65,7 +66,7 @@ public class QuestionBusinessService {
 	}
 
 	public QuestionEntity editQuestion(QuestionEntity questionEntity, final String questionId,
-			final String authorization) throws AuthorizationFailedException {
+			final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 		UserAuthEntity userAuthEntity = userAuthDao.getUserByAuthorization(authorization);
 
 		if (userAuthEntity == null) {
@@ -80,6 +81,10 @@ public class QuestionBusinessService {
 		QuestionEntity questionToBeEdited = questionDao.getQuestion(questionId);
 		UserEntity userEntity = userAuthEntity.getUser();
 
+		if(questionToBeEdited == null) {
+			throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
+		}
+		
 		if (questionToBeEdited.getUser().getUuid().equals(userEntity.getUuid())) {
 			questionEntity.setAnswers(questionToBeEdited.getAnswers());
 			questionEntity.setDate(questionToBeEdited.getDate());
@@ -93,7 +98,7 @@ public class QuestionBusinessService {
 		}
 	}
 
-	public QuestionEntity deleteQuestion(final String questionId, final String authorization) throws AuthorizationFailedException {
+	public QuestionEntity deleteQuestion(final String questionId, final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 		UserAuthEntity userAuthEntity = userAuthDao.getUserByAuthorization(authorization);
 
 		if (userAuthEntity == null) {
@@ -108,6 +113,10 @@ public class QuestionBusinessService {
 		QuestionEntity questionToBeDeleted = questionDao.getQuestion(questionId);
 		UserEntity userEntity = userAuthEntity.getUser();
 
+		if(questionToBeDeleted == null) {
+			throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
+		}
+		
 		if (questionToBeDeleted.getUser().getUuid().equals(userEntity.getUuid()) || 
 				userEntity.getRole().equalsIgnoreCase(ROLE)) {
 			return questionDao.deleteQuestion(questionToBeDeleted);
