@@ -100,7 +100,7 @@ public class AnswerController {
 		AnswerDeleteResponse answerDeleteResponse = new AnswerDeleteResponse().id(answerEntity.getUuid())
 				.status(STATUS_DELETED);
 
-		return new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse, HttpStatus.OK);
+		return new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse, HttpStatus.CREATED);
 	}
 
 	// get all answers to a specific question
