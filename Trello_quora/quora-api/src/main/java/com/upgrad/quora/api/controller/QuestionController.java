@@ -28,6 +28,7 @@ import com.upgrad.quora.service.dao.UserAuthDAO;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 
 @RestController
 @RequestMapping("/")
@@ -53,7 +54,8 @@ public class QuestionController {
 		questionEntity.setUser(userEntity);
 
 		QuestionEntity createdQuestionEntity = questionService.createQuestion(questionEntity);
-		QuestionResponse questionResponse = new QuestionResponse().id(createdQuestionEntity.getUuid()).status(STATUS_CREATED);
+		QuestionResponse questionResponse = new QuestionResponse().id(createdQuestionEntity.getUuid())
+				.status(STATUS_CREATED);
 
 		return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.OK);
 	}
@@ -107,12 +109,29 @@ public class QuestionController {
 			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
 
 		QuestionEntity questionEntity = questionService.deleteQuestion(questionId, authorization);
-		
+
 		QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse().id(questionEntity.getUuid())
-																					.status(STATUS_DELETED);
-		
+				.status(STATUS_DELETED);
+
 		return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
 	}
 
-	
+	// Get all questions posted by a particular user. This can be queried by any
+	// user.
+	// Throw appropriate errors when the user is not logged in, signed out or the
+	// user does not exist in the database.
+	@RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<List<QuestionDetailsResponse>> getQuestionsByUserId(
+			@PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization)
+			throws AuthorizationFailedException, UserNotFoundException {
+		List<QuestionEntity> allQuestions = questionService.getAllQuestionsByUserId(authorization, userId);
+
+		List<QuestionDetailsResponse> questionDetailsResponses = new ArrayList<QuestionDetailsResponse>();
+
+		for (QuestionEntity que : allQuestions) {
+			questionDetailsResponses.add(new QuestionDetailsResponse().id(que.getUuid()).content(que.getContent()));
+		}
+
+		return new ResponseEntity<List<QuestionDetailsResponse>>(questionDetailsResponses, HttpStatus.OK);
+	}
 }

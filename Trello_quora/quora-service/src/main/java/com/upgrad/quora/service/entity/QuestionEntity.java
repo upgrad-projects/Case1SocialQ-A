@@ -14,7 +14,8 @@ import java.util.List;
 @Table(name = "question")
 @NamedQueries({
 	@NamedQuery(name="Question.getAll", query="SELECT q FROM QuestionEntity q"),
-	@NamedQuery(name="Question.getQuestion", query="SELECT q FROM QuestionEntity q WHERE q.uuid = :questionId")
+	@NamedQuery(name="Question.getQuestion", query="SELECT q FROM QuestionEntity q WHERE q.uuid = :questionId"),
+	@NamedQuery(name="Question.getQuestionByUserId", query="SELECT q FROM QuestionEntity q WHERE q.user = :user")
 })
 public class QuestionEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

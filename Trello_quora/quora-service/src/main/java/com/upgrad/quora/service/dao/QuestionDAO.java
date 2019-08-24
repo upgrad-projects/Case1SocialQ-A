@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 
 @Repository
 public class QuestionDAO {
@@ -43,6 +44,12 @@ public class QuestionDAO {
 	public QuestionEntity deleteQuestion(QuestionEntity questionEntity) {
 		entityManager.remove(questionEntity);
 		return questionEntity;
+	}
+	
+	public List<QuestionEntity> getQuestionById(UserEntity userEntity) {
+		return entityManager.createNamedQuery("Question.getQuestionByUserId", QuestionEntity.class)
+					 .setParameter("user", userEntity)
+					 .getResultList();
 	}
 }
  
