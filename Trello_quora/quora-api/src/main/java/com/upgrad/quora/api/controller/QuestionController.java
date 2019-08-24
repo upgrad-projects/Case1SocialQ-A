@@ -28,6 +28,7 @@ import com.upgrad.quora.service.dao.UserAuthDAO;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 
 @RestController
@@ -57,7 +58,7 @@ public class QuestionController {
 		QuestionResponse questionResponse = new QuestionResponse().id(createdQuestionEntity.getUuid())
 				.status(STATUS_CREATED);
 
-		return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.OK);
+		return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.CREATED);
 	}
 
 	// Gets all questions asked by any user.
@@ -85,7 +86,7 @@ public class QuestionController {
 	@RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<QuestionEditResponse> editQuestionContent(QuestionEditRequest questionEditContent,
 			@PathVariable("questionId") final String questionId,
-			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
+			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 
 		QuestionEntity questionEntity = new QuestionEntity();
 
@@ -106,7 +107,7 @@ public class QuestionController {
 	// delete someone else's question.
 	@RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<QuestionDeleteResponse> deleteQuestion(@PathVariable("questionId") final String questionId,
-			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
+			@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 
 		QuestionEntity questionEntity = questionService.deleteQuestion(questionId, authorization);
 

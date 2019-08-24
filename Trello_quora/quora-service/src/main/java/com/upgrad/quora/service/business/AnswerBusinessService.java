@@ -47,9 +47,8 @@ public class AnswerBusinessService {
 
 	public UserEntity getUser(final String authorization) throws AuthorizationFailedException {
 		UserAuthEntity userAuthEntity = userAuthDao.getUserByAuthorization(authorization);
-		UserEntity userEntity = userAuthEntity.getUser();
 
-		if (userEntity == null) {
+		if (userAuthEntity == null) {
 			throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
 		}
 
@@ -57,7 +56,7 @@ public class AnswerBusinessService {
 			throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to post an answer");
 		}
 
-		return userEntity;
+		return userAuthEntity.getUser();
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

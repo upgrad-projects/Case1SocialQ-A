@@ -20,21 +20,21 @@ public class RestExceptionHandler {
 	@ExceptionHandler(SignUpRestrictedException.class)
     public ResponseEntity<ErrorResponse> signupException(SignUpRestrictedException exe, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.FORBIDDEN
+                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.CONFLICT
         );
     }
 	
 	@ExceptionHandler(AuthorizationFailedException.class)
     public ResponseEntity<ErrorResponse> signinException(AuthorizationFailedException exe, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.UNAUTHORIZED
+                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.FORBIDDEN
         );
     }
 	
 	@ExceptionHandler(SignOutRestrictedException.class)
     public ResponseEntity<ErrorResponse> signoutException(SignOutRestrictedException exe, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.FORBIDDEN
+                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.UNAUTHORIZED
         );
     }
 	

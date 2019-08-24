@@ -11,7 +11,7 @@ import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 
 @Service
-public class CommonBusinessSerivce {	
+public class CommonBusinessService {	
 	@Autowired
 	private UserAuthDAO userAuthDao;
 	
