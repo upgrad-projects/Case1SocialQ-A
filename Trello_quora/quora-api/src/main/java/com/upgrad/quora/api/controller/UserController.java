@@ -38,6 +38,10 @@ public class UserController {
 	
 	@Autowired 
 	SignoutBusinessService signoutBusinessService;
+	
+	private static final String MESSAGE_REGISTERED = "USER SUCCESSFULLY REGISTERED";
+	private static final String MESSAGE_SIGNEDIN = "SIGNED IN SUCCESSFULLY";
+	private static final String MESSAGE_SIGNEDOUT = "SIGNED OUT SUCCESSFULLY";
 
 	//This method deserializes json to create a new user who is trying to signup.
 	//Upon success returns the Uuid of the user created. Else triggers appropriate exceptions.
@@ -59,7 +63,7 @@ public class UserController {
 		
 		UserEntity createdUserEntity = signupBusinessService.signup(userEntity);
 		
-		final SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
+		final SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status(MESSAGE_REGISTERED);
 		
 		return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
 	}
@@ -78,7 +82,7 @@ public class UserController {
 		UserEntity userEntity = userAuthEntity.getUser();
 		
 		SigninResponse signinResponse = new SigninResponse().id(UUID.fromString(userEntity.getUuid()).toString())
-															.message("SIGNED IN SUCCESSFULLY");
+															.message(MESSAGE_SIGNEDIN);
 		
 		HttpHeaders header = new HttpHeaders();
 		header.add("access-token", userAuthEntity.getAccessToken());
@@ -94,7 +98,7 @@ public class UserController {
 	public ResponseEntity<SignoutResponse> signout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException {
 		UserEntity userEntity = signoutBusinessService.signout(authorization);
 		
-		SignoutResponse signoutResponse = new SignoutResponse().id(userEntity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
+		SignoutResponse signoutResponse = new SignoutResponse().id(userEntity.getUuid()).message(MESSAGE_SIGNEDOUT);
 		
 		return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
 	}
