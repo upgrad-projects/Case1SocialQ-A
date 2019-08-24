@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "answer")
 @NamedQueries({
-	//@NamedQuery(name="Answer.findAll", query="SELECT a FROM Answer a"),
+	@NamedQuery(name="Answer.findAllByQuestionId", query="SELECT a FROM AnswerEntity a WHERE a.question = :question"),
 	@NamedQuery(name="Answer.findAnswerById", query="SELECT a FROM AnswerEntity a where a.uuid = :answerId")
 })
 public class AnswerEntity implements Serializable {
