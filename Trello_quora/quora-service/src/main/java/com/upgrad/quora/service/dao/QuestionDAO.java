@@ -3,6 +3,7 @@ package com.upgrad.quora.service.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
@@ -29,9 +30,13 @@ public class QuestionDAO {
 	}
 	
 	public QuestionEntity getQuestion(final String questionId) {
-		return entityManager.createNamedQuery("Question.getQuestion", QuestionEntity.class)
+		try {
+			return entityManager.createNamedQuery("Question.getQuestion", QuestionEntity.class)
 							.setParameter("questionId", questionId)
 							.getSingleResult();
+		}catch (NoResultException nre) {
+			return null;
+		}
 	}
 	
 	@Transactional
@@ -47,9 +52,13 @@ public class QuestionDAO {
 	}
 	
 	public List<QuestionEntity> getQuestionById(UserEntity userEntity) {
-		return entityManager.createNamedQuery("Question.getQuestionByUserId", QuestionEntity.class)
+		try {
+			return entityManager.createNamedQuery("Question.getQuestionByUserId", QuestionEntity.class)
 					 .setParameter("user", userEntity)
 					 .getResultList();
+		}catch (NoResultException nre) {
+			return null;
+		}
 	}
 }
  
